@@ -1,0 +1,21 @@
+import asyncio
+
+import json
+import os
+from websockets import connect
+
+websocket_uri = "wss://fstream.binance.com/ws/!forceOrder@arr"
+
+
+async def binance_liquidations(uri):
+    async for websocket in connect(uri):
+        try:
+            while True:
+                msg = await websocket.recv()
+                print(msg)
+                msg = json.loads(msg)["o"]
+        except Exception as e:
+            print(e)
+            continue
+
+asyncio.run(binance_liquidations(websocket_uri))
